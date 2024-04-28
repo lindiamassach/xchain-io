@@ -1,0 +1,25 @@
+function getDisplayAddress(address,full){var html='',full=(full)?true:false,arr=address.split('_');if(arr.length>1){html='<a href="/address/'+address+'">Multisig Address</a> ('+arr[0]+'-of-'+arr[arr.length-1]+')';if(full){arr.forEach(function(addr,idx){if(idx>0&&idx<(arr.length-1)){html+='<br/><a href="/address/'+addr+'">'+addr+'</a>';}});}}else{html+='<a href="/address/'+address+'">'+address+'</a>';}
+return html;}
+function getValidUrl(url){var re1=/^http:\/\//,re2=/^https:\/\//;if(!(re1.test(url)||re2.test(url)))
+url='http://'+url;return url;}
+function hex2string(hexx){var hex=hexx.toString();var str='';for(var i=0;(i<hex.length&&hex.substr(i,2)!=='00');i+=2)
+str+=String.fromCharCode(parseInt(hex.substr(i,2),16));return str;}
+function base64ToHex(str){const raw=atob(str);let result='';for(let i=0;i<raw.length;i++){const hex=raw.charCodeAt(i).toString(16);result+=(hex.length===2?hex:'0'+hex);}
+return result;}
+function isNFT(asset){var asset_upper=String(asset).toUpperCase();if(NFT_CARDS[asset]||NFT_CARDS[asset_upper])
+return true;return false;}
+function getNFTImage(asset){if(NFT_CARDS[asset])
+return asset+"."+NFT_CARDS[asset];var asset_upper=String(asset).toUpperCase();if(NFT_CARDS[asset_upper])
+return asset_upper+"."+NFT_CARDS[asset_upper];return false}
+function getNFTInfo(asset){var info={asset:asset,image:getNFTImage(asset),projects:[]};NFT_DATA.forEach(function(project){if(project.cards.indexOf(info.image)!=-1){info.projects.push({project:project.name,logo:project.logo,site:project.site})}});return info;}
+function autoCollapseTabs(rerun=false){var tabs=$('#data-tabs'),more=$('#data-tabs-more'),last=$('#data-last-tab'),max=tabs.width(),width=last.width(),main=[],menu=[];tabs.find('li.tab').each(function(idx,item){var w=$(item).width();width+=w;if(width<=max){main.push(item);}else{menu.push(item);}});main.forEach(function(item){$(item).insertBefore(last);});menu.forEach(function(item){more.append(item);});if(menu.length==0)
+last.hide();else
+last.show();var h=tabs.height();if(tabs.height()>50&&!rerun)
+autoCollapseTabs(true);}
+function isASS(asset){var asset_upper=String(asset).toUpperCase();if(ASS_CARDS[asset]||ASS_CARDS[asset_upper])
+return true;return false;}
+function getASSInfo(asset){var info=ASS_CARDS[asset];return info;}
+function displayForkWarning(o){var el=$('#header-alert'),txt='This transaction is NOT seen as valid on both 9.61.1 and 9.62.0 ledgers!';if(o.valid&&o.valid['9.61.1']==true&&o.valid['9.61.1']==true){txt='This transaction is seen as valid on both 9.61.1 and 9.62.0 ledgers!';el.removeClass('alert-danger').addClass('alert-success');}
+txt+='<br>Please exercise caution and verify your transactions at <a href="https://memepool.wtf/tx/'+o.tx_hash+'" target="_blank">memepool.wtf</a> or <a href="https://xcp.dev/tx/'+o.tx_hash+'" target="_blank">xcp.dev</a> before trusting this information!';el.html(txt).show();}
+NFT_CARDS=[];ASS_CARDS=[];$(document).ready(function(){if(typeof NFT_DATA!=='undefined'){NFT_DATA.forEach(function(project){project.cards.forEach(function(card){var a=card.split('.'),b=a.slice(0,-1);name=b.join('.');ext=a[a.length-1];NFT_CARDS[name]=ext;});});}
+if(typeof ASS_DATA!=='undefined'){Object.entries(ASS_DATA).forEach(([key,value])=>{ASS_CARDS[key]=value;});}});
